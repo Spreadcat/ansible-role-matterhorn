@@ -1,31 +1,19 @@
 # Role spreadcat.matterhorn
 
-A brief description of the role goes here.
+A simple Ansible role to setup matterhorn on the local machine and configure it.
+It fetches the releases from the matterhorn GitHub page and installs it locally.
 
 ## Requirements
 
-Any pre-requisites that may not be covered by Ansible itself or the role
-should be mentioned here. For instance, if the role uses the EC2 module,
-it may be a good idea to mention in this section that the boto package is
-required.
+* `bunzip2`, `gunzip`, something like that can be used to unpack the release.
 
 ## Role Variables
 
-A description of the settable variables for this role should go here, including
-any variables that are in defaults/main.yml, vars/main.yml, and any variables
-that can/should be set via parameters to the role. Any variables that are read
-from other roles and/or the global scope (ie. hostvars, group vars, etc.)
-should be mentioned here as well.
-
-## Other Variables
-
-A description of variables not usually modified goes here.
+For a list of role variables, defaults and how to use them check out the file `./defaults/main.yml`.
 
 ## Dependencies
 
-A list of other roles hosted on Galaxy should go here, plus any details in
-regards to parameters that may need to be set for other roles, or variables
-that are used from other roles.
+* None
 
 ## Example Playbook
 
@@ -38,7 +26,9 @@ passed in as parameters) is always nice for users too:
   connection: local
   roles:
     - role: spreadcat.matterhorn
-      x: 42
+      matterhorn_mattermost_host: "www.example.com"
+      matterhorn_mattermost_username: "jdoe"
+      matterhorn_mattermost_password: "foobar"
 ```
 
 ## License
@@ -47,7 +37,4 @@ MIT
 
 ## Author Information
 
-An optional section for the role authors to include contact information,
-or a website (HTML is not allowed).
-
-This role was created and is maintained by Daniel Buøy-Vehn.
+Written and maintained by [dbv](mailto:spreadcat.github@micronarrativ.org)
