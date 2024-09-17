@@ -1,0 +1,31 @@
+---
+- name: Default | Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+
+    - name: Verify | Include role defaults
+      ansible.builtin.include_vars: ../../defaults/main.yml
+
+    - name: Verify | Include variables
+      ansible.builtin.include_vars: variables.yml
+
+    - name: Verify | Assert that the matterhorn binary is available
+      ansible.builtin.assert:
+        that: ansible_local['matterhorn']['matterhorn_installed']
+
+    - name: Verify | Check the status of the configuration file
+      ansible.builtin.stat:
+        path: "{{ matterhorn_config_dir }}/{{ matterhorn_config_file }}"
+      register: __stat_config_file
+
+    - name: Verify | Assert that the config file has been deployed correctly
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - __stat_config_file['stat']['exists']
+          - __stat_config_file['stat']['gr_name'] == matterhorn_groupname
+          - not __stat_config_file['stat']['executable']
+          - __stat_config_file['stat']['readable']
+          - __stat_config_file['stat']['pw_name'] == matterhorn_username
+          - __stat_config_file['stat']['mode'] == '0644'

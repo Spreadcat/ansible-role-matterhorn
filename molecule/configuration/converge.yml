@@ -1,0 +1,18 @@
+---
+- name: Configuration | Converge
+  hosts: all
+  tasks:
+
+    - name: Converge | Include variables
+      ansible.builtin.include_vars: variables.yml
+
+    - name: Converge | Variable replacement
+      ansible.builtin.set_fact:
+        m_m_username: "{{ matterhorn_mattermost_username }}"
+
+    - name: "Converge | Include role spreadcat.matterhorn"
+      ansible.builtin.include_role:
+        name: "spreadcat.matterhorn"
+      vars:
+        matterhorn_config_file_overwrite: true
+        matterhorn_mattermost_username: "{{ m_m_username }}"

@@ -1,0 +1,21 @@
+---
+- name: Default | Prepare
+  hosts: all
+  gather_facts: false
+  tasks:
+
+    - name: Prepare  | Ensure fact directory exists
+      ansible.builtin.file:
+        state: directory
+        path: /etc/ansible/facts.d
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Prepare | Deploy the matterhorn fact
+      ansible.builtin.copy:
+        dest: /etc/ansible/facts.d/matterhorn.fact
+        src: matterhorn.fact
+        owner: root
+        group: root
+        mode: '0755'

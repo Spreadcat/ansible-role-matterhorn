@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Ansible fact to check the status of matterhorn on a host.
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+# Defaults
+matterhorn_installed='false'
+
+if command -v matterhorn 2>&1 1>/dev/null; then
+  matterhorn_installed='true'
+fi
+  
+printf '{ "matterhorn_installed": "%s" }\n' "${matterhorn_installed}"

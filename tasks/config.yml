@@ -1,0 +1,20 @@
+---
+# Configuration parts of the role.
+- name: Config | Ensure config directory exists
+  ansible.builtin.file:
+    state: directory
+    path: "{{ matterhorn_config_dir }}"
+    owner: "{{ matterhorn_username }}"
+    group: "{{ matterhorn_groupname }}"
+    mode: '0755'
+
+# No config file validation. This fails if no config file is present. Weird?
+# validate: "matterhorn --check-config --config=%s"
+- name: Config | Deploy the config file
+  ansible.builtin.template:
+    src: config.ini.j2
+    dest: "{{ matterhorn_config_dir }}/{{ matterhorn_config_file }}"
+    owner: "{{ matterhorn_username }}"
+    group: "{{ matterhorn_groupname }}"
+    force: "{{ true if matterhorn_config_file_overwrite is true else false }}"
+    mode: '0644'
