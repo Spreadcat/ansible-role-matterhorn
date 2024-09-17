@@ -2,7 +2,7 @@
 # defaults file for spreadcat.matterhorn
 matterhorn_release_url: "https://github.com/matterhorn-chat/matterhorn/releases/download/90000.0.1/matterhorn-90000.0.1-fedora-29-x86_64.tar.bz2"
 matterhorn_username: "{{ lookup('env', 'USER') }}"
-matterhorn_groupname: "{{ lookup'env', 'USER') }}"
+matterhorn_groupname: "{{ lookup('env', 'USER') }}"
 matterhorn_userhome: "{{ lookup('env', 'HOME') }}"
 matterhorn_dest_dir: "/usr/bin"
 matterhorn_config_dir: "{{ matterhorn_userhome }}/.config/matterhorn"

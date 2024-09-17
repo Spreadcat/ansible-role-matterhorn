@@ -18,3 +18,4 @@
     group: "{{ matterhorn_groupname }}"
     force: "{{ true if matterhorn_config_file_overwrite is true else false }}"
     mode: '0644'
+    backup: true
