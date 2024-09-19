@@ -1,0 +1,76 @@
+# Config file for matterhorn
+# Ansible managed
+
+[mattermost]
+{% if matterhorn_mattermost_username | length > 0 %}
+user: {{ matterhorn_mattermost_username }}
+{% endif %}
+{% if matterhorn_mattermost_host | length > 0 %}
+host: {{ matterhorn_mattermost_host }}
+{% endif %}
+{% if matterhorn_mattermost_team | length > 0 %}
+team: {{ matterhorn_mattermost_team }}
+{% endif %}
+port: {{ matterhorn_mattermost_port }}
+{% if matterhorn_mattermost_urlpath | length > 0 %}
+urlpath: {{ matterhorn_mattermost_urlpath }}
+{% endif %}
+{% if matterhorn_mattermost_pass | length > 0 %}
+pass: {{ matterhorn_mattermost_pass }}
+{% endif %}
+{% if matterhorn_mattermost_passcmd | length > 0 %}
+passcmd: {{ matterhorn_mattermost_passcmd }}
+{% endif %}
+{% if matterhorn_mattermost_tokencmd | length > 0 %}
+tokencmd: {{ matterhorn_mattermost_tokencmd }}
+{% endif %}
+{% if matterhorn_mattermost_otptokencmd | length > 0 %}
+otptokencmd: {{ matterhorn_mattermost_otptokencmd }}
+{% endif %}
+timeFormat: {{ matterhorn_timeformat }}
+showMessageTimestamps: {{ matterhorn_showmessagetimestamps | string | title }}
+showLastOpenThread: {{ matterhorn_showlastopenthread | string | title }}
+theme: {{ matterhorn_theme }}
+{% if matterhorn_themecustomizationfile | length > 0 %}
+themeCustomizationFile: {{ matterhorn_themecustomizationfile }}
+{% endif %}
+smartbacktick: {{ matterhorn_smartbacktick | string | title }}
+activityBell: {{ matterhorn_activitybell | string | title }}
+truncateVerbatimBlockHeight: {{ matterhorn_truncateverbatimblockheight }}
+{% if matterhorn_activitynotifycommand | length > 0 %}
+activityNotifyCommand: {{ matterhorn_activitynotifycommand }}
+{% endif %}
+activityNotifyVersion: {{ matterhorn_activitynotifyversion }}
+showbackgroundactivity: {{ matterhorn_showbackgroundactivity }}
+{% if matterhorn_urlopencommand | length > 0 %}
+urlOpenCommand: {{ matterhorn_urlopencommand }}
+{% endif %}
+urlOpenCommandIsInteractive: {{ matterhorn_urlopencommandisinteractive | string | title }}
+showMessagePreview: {{ matterhorn_showmessagepreview | string | title }}
+showChannelList: {{ matterhorn_showchannellist | string | title }}
+showExpandedChannelTopics: {{ matterhorn_showexpandedchanneltopics }}
+directChannelExpirationDays: {{ matterhorn_directchannelexpirationdays }}
+enableAspell: {{ matterhorn_enableaspell | string | title }}
+{% if matterhorn_aspelldictionary | length > 0 %}
+aspellDictionary: {{ matterhorn_aspelldictionary }}
+{% endif %}
+unsafeUseUnauthenticatedConnection = {{ matterhorn_unsafeuseunauthenticatedconnection | string | title }}
+validateServerCertificate = {{ matterhorn_validateservercertificate | string | title }}
+channelListWidth = {{ matterhorn_channellistwidth }}
+channelListOrientation = {{ matterhorn_channellistorientation }}
+threadOrientation = {{ matterhorn_threadorientation }}
+logMaxBufferSize = {{ matterhorn_logmaxbuffersize }}
+showOlderEdits = {{ matterhorn_showolderedits | string | title }}
+showTypingIndicator = {{ matterhorn_showtypingindicator | string | title }}
+sendTypingNotifications = {{ matterhorn_sendtypingnotifications | string | title }}
+hyperlinkURLs = {{ matterhorn_hyperlinkurls | string | title }}
+{% if matterhorn_syntaxdirectories | length > 0 %}
+syntaxDirectories = {{ matterhorn_syntaxdirectories | join(':') }}
+{% endif %}
+cpuUsagePolicy = {{ matterhorn_cpuusagepolicy }}
+{% if matterhorn_defaultattachmentpath | length > 0 %}
+defaultAttachmentPath = {{ matterhorn_defaultattachmentpath }}
+{% endif %}
+enableMouseMode = {{ matterhorn_enablemousemode | string | title }}
+channelListSorting = {{ matterhorn_channellistsorting }}
+teamListSorting = {{ matterhorn_teamListSorting }}

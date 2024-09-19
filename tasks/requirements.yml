@@ -1,0 +1,36 @@
+---
+- name: Requirements | Load OS specific variables
+  ansible.builtin.include_vars: "{{ lookup('ansible.builtin.first_found', params) }}"
+  vars:
+    params:
+      files:
+        - '{{ ansible_distribution | lower }}.{{ ansible_distribution_version }}.yml'
+        - '{{ ansible_distribution | lower }}.yml'
+        - '{{ansible_os_family}}.yaml'
+      paths:
+        - 'defaults'
+
+- name: Requirements | Try to assert the current matterhorn installation status
+  block:
+
+    - name: Requirements | Ensure facts directory exists
+      ansible.builtin.file:
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+        path: "/etc/ansible/facts.d"
+
+    - name: Requirements | Deploy the Matterhorn cache fact
+      ansible.builtin.copy:
+        src: matterhorn.fact
+        dest: /etc/ansible/facts.d/matterhorn.fact
+        owner: root
+        group: root
+        mode: '0555'
+      register: __matterhorn_fact
+
+    - name: Requirements | Update facts cache
+      ansible.builtin.setup:
+        gather_subset: "!all"
+      when: __matterhorn_fact.changed
