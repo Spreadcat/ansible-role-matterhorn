@@ -1,56 +1,56 @@
 ---
 # Installing parts of the role.
+# We install only the binary file, no releases or pre-built. The reason for that is that
+# there are only releases for a part of distributiond versions and the complexity of handling exceptions
+# in all other cases makes this role unnecessary complex.
 
-- name: Install | Fetch the latest and greatest
-  when: matterhorn_state == "latest"
+- name: Install | Fetch the latest release information from GitHub
+  ansible.builtin.uri:
+    url: "{{ matterhorn_github_release_url }}"
+    return_content: true
+  register: __json_response
+  run_once: true
+  delegate_to: localhost
+  changed_when: false
+
+- name: Install | Update or Install matterhorn
+  when: (
+    ( not ansible_local['matterhorn']['installed'] )
+    or
+    ( matterhorn_state == 'latest' and
+      ansible_local['matterhorn']['version'] is version(__json_response['json']['tag_name'], '<'))
+    )
   block:
-    - name: Install | Fetch the latest release information from GitHub
-      ansible.builtin.uri:
-        url: https://api.github.com/repos/ansible/ansible/releases/latest
-        return_content: true
-    register: __json_reponse
 
-  - get_url:
-      url: "{{ __json_reponse.json.tarball_url }}"
-      dest: ./ansible-latest.tar.gz
+    - name: Install | Fetch the fitting release for the platform
+      ansible.builtin.get_url:
+        url: "{{ item['browser_download_url'] }}"
+        dest: "{{ matterhorn_userhome }}/matterhorn.tar.bz2"
+      loop: "{{ __json_response['json']['assets'] }}"
+      when: (
+        (
+          ('fedora' in item['name']) and
+          ('fedora' in ansible_distribution | lower)
+        ) or (
+        ansible_distribution | lower ~ '-' ~ ansible_distribution_version in item['name']
+        )
+        )
 
+    - name: Install | Unpack compressed file
+      ansible.builtin.unarchive:
+        src: "{{ matterhorn_userhome }}/matterhorn.tar.bz2"
+        dest: "{{ matterhorn_userhome }}/"
+        extra_opts: ['--strip-components=1', '--show-stored-names', '--wildcards']
+        include:
+          - "*/matterhorn"
+        remote_src: true
 
-- name: Install | Update apt-cache
-  ansible.builtin.apt:
-    update_cache: true
-  when: ansible_os_family | lower == 'debian'
-
-- name: Install | Install requirements
-  become: true
-  ansible.builtin.package:
-    name: bzip2,unzip,tar
-    state: present
-
-# Download the source file
-- name: Install | Download the release
-  environment:
-    TMPDIR: "{{ matterhorn_userhome }}/tmp"
-  ansible.builtin.get_url:
-    url: "{{ matterhorn_release_url }}"
-    dest: "{{ matterhorn_userhome }}/matterhorn.tar.bz2"
-    owner: "{{ matterhorn_username }}"
-    group: "{{ matterhorn_groupname }}"
-
-- name: Install | Decompress source file
-  ansible.builtin.unarchive:
-    src: "{{ matterhorn_userhome }}/matterhorn.tar.bz2"
-    dest: "{{ matterhorn_userhome }}/"
-    extra_opts: ['--strip-components=1', '--show-stored-names', '--wildcards']
-    include:
-      - "*/matterhorn"
-    remote_src: true
-
-- name: Install | Move binary file to target destination
-  become: true
-  ansible.builtin.copy:
-    src: "{{ matterhorn_userhome }}/matterhorn"
-    dest: "{{ matterhorn_dest_dir }}/"
-    remote_src: true
-    owner: root
-    group: root
-    mode: '0755'
+    - name: Install | Move binary file to target destination
+      become: true
+      ansible.builtin.copy:
+        src: "{{ matterhorn_userhome }}/matterhorn"
+        dest: "{{ matterhorn_dest_dir }}/"
+        remote_src: true
+        owner: root
+        group: root
+        mode: '0755'

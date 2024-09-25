@@ -14,6 +14,7 @@
   block:
 
     - name: Requirements | Ensure facts directory exists
+      become: true
       ansible.builtin.file:
         state: directory
         owner: root
@@ -22,6 +23,7 @@
         path: "/etc/ansible/facts.d"
 
     - name: Requirements | Deploy the Matterhorn cache fact
+      become: true
       ansible.builtin.copy:
         src: matterhorn.fact
         dest: /etc/ansible/facts.d/matterhorn.fact
@@ -34,3 +36,16 @@
       ansible.builtin.setup:
         gather_subset: "!all"
       when: __matterhorn_fact.changed
+
+    - name: Requirements | Update apt-cache
+      become: true
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 7200
+      when: ansible_distribution | lower == 'ubuntu'
+
+    - name: Requirements | Install bzip2
+      become: true
+      ansible.builtin.package:
+        name: bzip2
+        state: latest

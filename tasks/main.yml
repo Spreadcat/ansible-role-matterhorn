@@ -4,12 +4,5 @@
   ansible.builtin.include_tasks: "./requirements.yml"
 - name: Main | Include install.yml
   ansible.builtin.include_tasks: "./install.yml"
-  when:
-    - (
-      not vars['ansible_local']['matterhorn']['installed'] or
-      matterhorn_state != "latest"
-      )
-- name: End the play
-  meta: end_play
 - name: Main | Include config.yml
   ansible.builtin.include_tasks: "./config.yml"

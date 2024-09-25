@@ -12,7 +12,7 @@
 
     - name: Verify | Assert that the matterhorn binary is available
       ansible.builtin.assert:
-        that: ansible_local['matterhorn']['matterhorn_installed']
+        that: ansible_local['matterhorn']['installed']
 
     - name: Verify | Check the status of the configuration file
       ansible.builtin.stat:

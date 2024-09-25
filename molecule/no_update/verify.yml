@@ -1,0 +1,9 @@
+---
+- name: No_update | Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+
+    - name: Verify | Assert that the version of Matterhorn has not been updated
+      ansible.builtin.assert:
+        that: ansible_local['matterhorn']['version'] is version('90000.0.0', '=')

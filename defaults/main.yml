@@ -16,15 +16,54 @@ matterhorn_release_url: ""
 # If set to present, matterhorn will be installed if missing, otherwise not.
 #
 # Example:
-#   matterhorn_state: present
+#   matterhorn_state: "latest"
 #
-matterhorn_state: "latest"
+matterhorn_state: "present"
 
+# Sets the hosts user account to use when placing the config file and
+# giving file permissions. The user must exist.
+#
+# Example:
+#   matterhorn_username: "jdoe"
+#
 matterhorn_username: "{{ lookup('env', 'USER') }}"
+
+# Sets the groupname for filepermissions on the destination host.
+# The group must exist.
+#
+# Example:
+#   matterhorn_groupname: "jdoe"
+#
 matterhorn_groupname: "{{ lookup('env', 'USER') }}"
+
+# Sets the path to the userhome in which the configuration
+# file will be deployed.
+#
+# Example:
+#   matterhorn_userhome: "/home/jdoe"
+#
 matterhorn_userhome: "{{ lookup('env', 'HOME') }}"
+
+# Sets the destination directory in which the binary file of matterhorn will be placed.
+# This assumes a system wide accessible directory. The file ownership will be the root account.
+#
+# Example:
+#   matterhorn_Dest_dir: "/usr/bin"
+#
 matterhorn_dest_dir: "/usr/bin"
+
+# Sets the path to where the matterhorn configuration file will be placed.
+#
+# Example:
+#   matterhorn_config_dir: "/home/jdoe/.config/matterhorn"
 matterhorn_config_dir: "{{ matterhorn_userhome }}/.config/matterhorn"
+
+# Set the filename of the configuration file for matterhorn within the configuration
+# directory.
+#
+# Example:
+#   matterhorn_config_file: "config.ini"
+#
 matterhorn_config_file: "config.ini"
 
 # If set to true any existing configuration file at matterhorn_config_dir will be overwritten
@@ -551,3 +590,13 @@ matterhorn_channellistsorting: default
 #   matterhorn_teamlistsorting: 'default'
 #
 matterhorn_teamListSorting: 'default'
+
+# Sets the URL For the release of matterhorn on Github.
+#
+# This url is used to pull the latest release from GitHub and install it
+# if the matterhorn_state is set to 'latest' or no rpm is given.
+#
+# Example:
+#   matterhorn_github_release_url: "https://github.com/matterhorn-chat/matterhorn/releases/"
+#
+matterhorn_github_release_url: "https://api.github.com/repos/matterhorn-chat/matterhorn/releases/latest"

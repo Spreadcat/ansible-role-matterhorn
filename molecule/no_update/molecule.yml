@@ -44,7 +44,7 @@ provisioner:
 verifier:
   name: ansible
 scenario:
-  name: default
+  name: no_update
   test_sequence:
     - destroy
     - syntax

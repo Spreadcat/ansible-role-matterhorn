@@ -28,7 +28,7 @@ def set_version(version):
     results['installed'] = True
     results['version'] = version
 
-f = os.popen('command -v matterhorn2')
+f = os.popen('command -v matterhorn')
 arq = f.readlines()
 if len(arq) > 0 and 'matterhorn' in arq[0]:
     f = os.popen('matterhorn --version')

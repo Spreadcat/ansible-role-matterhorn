@@ -7,3 +7,5 @@
 fule_replace_meta_file: true
 fule_molecule_scenarios:
   - configuration
+  - update
+  - no_update

@@ -1,0 +1,17 @@
+---
+- name: No_update | Prepare
+  hosts: all
+  gather_facts: false
+  tasks:
+
+    - name: Prepare | Drop a fake matterhorn version
+      ansible.builtin.copy:
+        dest: /usr/bin/matterhorn
+        content: |
+          #!/usr/bin/env bash
+          echo 'matterhorn 90000.0.0 (master@2eede8b)'
+          echo ' using mattermost-api 90000.0.0 (HEAD@b082f9d)'
+        mode: '0755'
+        owner: root
+        group: root
+
