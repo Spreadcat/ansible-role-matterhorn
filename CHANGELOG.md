@@ -22,6 +22,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The installation behaviour has been changed. The role now installes the latest version released from the source
   repository. By default existing installation will not be updated unless the parameter `matterhorn_state` has been set
   to `latest`.
+- Updated the linting rules for Yamllint and markdown-lint.
+
+### Removed
+
+- The parameter `matterhorn_release_url` has been removed.
 
 ## [v1.0.1] - 2024-09-17
 

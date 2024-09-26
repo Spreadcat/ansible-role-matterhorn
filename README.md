@@ -3,6 +3,8 @@
 A simple Ansible role to setup matterhorn on the local machine and configure it.
 It fetches the releases from the matterhorn GitHub page and installs it locally.
 
+Souce repository: <https://github.com/matterhorn-chat/matterhorn/>
+
 ## Requirements
 
 * None

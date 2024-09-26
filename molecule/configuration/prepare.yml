@@ -2,8 +2,4 @@
 - name: Configuration | Prepare
   hosts: all
   gather_facts: false
-  tasks:
-
-    - name: Prepare | Install requirements
-      ansible.builtin.package:
-        name: bzip2
+  tasks: []
