@@ -1,13 +1,4 @@
 ---
-# defaults file for spreadcat.matterhorn
-#
-# Sets the file to install matterhorn from.
-# This is only be effective, if the matterhorn state is set to latest.
-#
-# Example:
-#  matterhorn_release_url: "https://github.com/matterhorn-chat/matterhorn/releases/download/90000.0.1/matterhorn-90000.0.1-fedora-29-x86_64.tar.bz2"
-matterhorn_release_url: ""
-
 # Set the state of matterhorn on the target host.
 # If set to latest, the role will check for the latest release online
 # and update the local installation if it's lower than the remote one.
@@ -589,7 +580,7 @@ matterhorn_channellistsorting: default
 # Example:
 #   matterhorn_teamlistsorting: 'default'
 #
-matterhorn_teamListSorting: 'default'
+matterhorn_teamlistsorting: 'default'
 
 # Sets the URL For the release of matterhorn on Github.
 #

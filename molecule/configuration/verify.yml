@@ -46,7 +46,7 @@
       - line: "defaultAttachmentPath = {{ matterhorn_defaultattachmentpath }}"
       - line: "enableMouseMode = {{ matterhorn_enablemousemode | string | title }}"
       - line: "channelListSorting = {{ matterhorn_channellistsorting }}"
-      - line: "teamListSorting = {{ matterhorn_teamListSorting }}"
+      - line: "teamListSorting = {{ matterhorn_teamlistsorting }}"
   tasks:
 
     - name: Verify | Include variables

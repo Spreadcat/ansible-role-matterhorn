@@ -26,6 +26,9 @@
       ansible.builtin.get_url:
         url: "{{ item['browser_download_url'] }}"
         dest: "{{ matterhorn_userhome }}/matterhorn.tar.bz2"
+        owner: "{{ matterhorn_username }}"
+        group: "{{ matterhorn_groupname }}"
+        mode: '0755'
       loop: "{{ __json_response['json']['assets'] }}"
       when: (
         (

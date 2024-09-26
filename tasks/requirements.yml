@@ -6,7 +6,7 @@
       files:
         - '{{ ansible_distribution | lower }}.{{ ansible_distribution_version }}.yml'
         - '{{ ansible_distribution | lower }}.yml'
-        - '{{ansible_os_family}}.yaml'
+        - '{{ ansible_os_family }}.yaml'
       paths:
         - 'defaults'
 
@@ -32,7 +32,7 @@
         mode: '0555'
       register: __matterhorn_fact
 
-    - name: Requirements | Update facts cache
+    - name: Requirements | Update facts cache  # noqa: no-handler
       ansible.builtin.setup:
         gather_subset: "!all"
       when: __matterhorn_fact.changed
@@ -48,4 +48,4 @@
       become: true
       ansible.builtin.package:
         name: bzip2
-        state: latest
+        state: present

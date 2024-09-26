@@ -50,4 +50,4 @@ matterhorn_cpuusagepolicy: single
 matterhorn_defaultattachmentpath: /example/matterhorn/attachments
 matterhorn_enablemousemode: true
 matterhorn_channellistsorting: unread-first
-matterhorn_teamListSorting: unread-first
+matterhorn_teamlistsorting: unread-first
