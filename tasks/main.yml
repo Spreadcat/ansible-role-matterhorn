@@ -1,0 +1,8 @@
+---
+# Main tasks file.
+- name: Main | Include requirements.yml
+  ansible.builtin.include_tasks: "./requirements.yml"
+- name: Main | Include install.yml
+  ansible.builtin.include_tasks: "./install.yml"
+- name: Main | Include config.yml
+  ansible.builtin.include_tasks: "./config.yml"

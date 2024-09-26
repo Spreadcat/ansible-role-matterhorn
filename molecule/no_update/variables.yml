@@ -1,0 +1,8 @@
+---
+matterhorn_username: "ansible"
+matterhorn_groupname: "ansible"
+matterhorn_userhome: "/home/ansible"
+matterhorn_config_file_overwrite: true
+matterhorn_mattermost_username: jdoe
+matterhorn_mattermost_host: ""
+matterhorn_mattermost_pass: ""

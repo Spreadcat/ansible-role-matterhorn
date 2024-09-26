@@ -1,0 +1,51 @@
+---
+- name: Requirements | Load OS specific variables
+  ansible.builtin.include_vars: "{{ lookup('ansible.builtin.first_found', params) }}"
+  vars:
+    params:
+      files:
+        - '{{ ansible_distribution | lower }}.{{ ansible_distribution_version }}.yml'
+        - '{{ ansible_distribution | lower }}.yml'
+        - '{{ ansible_os_family }}.yaml'
+      paths:
+        - 'defaults'
+
+- name: Requirements | Try to assert the current matterhorn installation status
+  block:
+
+    - name: Requirements | Ensure facts directory exists
+      become: true
+      ansible.builtin.file:
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+        path: "/etc/ansible/facts.d"
+
+    - name: Requirements | Deploy the Matterhorn cache fact
+      become: true
+      ansible.builtin.copy:
+        src: matterhorn.fact
+        dest: /etc/ansible/facts.d/matterhorn.fact
+        owner: root
+        group: root
+        mode: '0555'
+      register: __matterhorn_fact
+
+    - name: Requirements | Update facts cache  # noqa: no-handler
+      ansible.builtin.setup:
+        gather_subset: "!all"
+      when: __matterhorn_fact.changed
+
+    - name: Requirements | Update apt-cache
+      become: true
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 7200
+      when: ansible_distribution | lower == 'ubuntu'
+
+    - name: Requirements | Install bzip2
+      become: true
+      ansible.builtin.package:
+        name: bzip2
+        state: present

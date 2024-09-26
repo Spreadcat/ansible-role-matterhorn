@@ -1,0 +1,53 @@
+---
+matterhorn_username: "ansible"
+matterhorn_groupname: "ansible"
+matterhorn_userhome: "/home/ansible"
+matterhorn_config_file_overwrite: true
+matterhorn_config_dir: "{{ matterhorn_userhome }}/.config/matterhorn"
+matterhorn_config_file: "config.ini"
+
+matterhorn_mattermost_username: jdoe
+matterhorn_mattermost_host: "mattermost.example.com"
+matterhorn_mattermost_pass: "foobar"
+matterhorn_mattermost_team: "footeam"
+matterhorn_mattermost_port: 444
+matterhorn_mattermost_urlpath: "/mattermost"
+matterhorn_mattermost_passcmd: "pass mattermost | head -n 1"
+matterhorn_mattermost_otptokencmd: "pass otp mattermost | head -n 1"
+matterhorn_timeformat: "%Y-%m-%d"
+matterhorn_showmessagetimestamps: false
+matterhorn_showlastopenthread: true
+matterhorn_theme: light
+matterhorn_themecustomizationfile: /example/matterhorn/theme.ini
+matterhorn_smartbacktick: true
+matterhorn_activitybell: true
+matterhorn_truncateverbatimblockheight: 3
+matterhorn_activitynotifyversion: 2
+matterhorn_showbackgroundactivity: Active
+matterhorn_urlopencommand: "wget %s"
+matterhorn_urlopencommandisinteractive: true
+matterhorn_showmessagepreview: true
+matterhorn_showchannellist: false
+matterhorn_showexpandedchanneltopics: false
+matterhorn_directchannelexpirationdays: 5
+matterhorn_enableaspell: true
+matterhorn_aspelldictionary: /example/aspell/dict
+matterhorn_unsafeuseunauthenticatedconnection: true
+matterhorn_validateservercertificate: false
+matterhorn_channellistwidth: 30
+matterhorn_channellistorientation: right
+matterhorn_threadorientation: above
+matterhorn_logmaxbuffersize: 300
+matterhorn_showolderedits: false
+matterhorn_showtypingindicator: true
+matterhorn_sendtypingnotifications: true
+matterhorn_hyperlinkurls: false
+matterhorn_syntaxdirectories:
+  - /tmp/syntax1
+  - /tmp/syntax2
+  - ~/.matterhorn/syntax3
+matterhorn_cpuusagepolicy: single
+matterhorn_defaultattachmentpath: /example/matterhorn/attachments
+matterhorn_enablemousemode: true
+matterhorn_channellistsorting: unread-first
+matterhorn_teamlistsorting: unread-first

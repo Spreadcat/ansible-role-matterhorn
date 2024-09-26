@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+# -*- coding: utf8 -*-
+# 2024-09-19 / dbv
+""" A little Ansible fact to determine the version install (or not installed) on the host.
+"""
+
+import os
+import json
+
+results = {'installed': False, 'version': None}
+
+def check_cmd(cmd, path=None):
+    """ Function to verify a given command exists on the platform and can b used. """
+
+    if path is None:
+        path = os.environ["PATH"].split(os.pathsep)
+
+    for prefix in path:
+        filename = os.path.join(prefix, cmd)
+        executable = os.access(filename, os.X_OK)
+        is_not_directory = os.path.isfile(filename)
+        if executable and is_not_directory:
+          return True
+    return False
+
+def set_version(version):
+    """ Function to set the version field."""
+    results['installed'] = True
+    results['version'] = version
+
+f = os.popen('command -v matterhorn')
+arq = f.readlines()
+if len(arq) > 0 and 'matterhorn' in arq[0]:
+    f = os.popen('matterhorn --version')
+    matterhorn_version_stdout = f.readlines()
+    set_version(matterhorn_version_stdout[0].split(' ')[1])
+
+print(json.dumps(results))

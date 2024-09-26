@@ -1,0 +1,9 @@
+---
+- name: Update | Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+
+    - name: Verify | Assert Matterhorn has been updated to a higher version than the fake one
+      ansible.builtin.assert:
+        that: ansible_local['matterhorn']['version'] is version('90000.0.0', '>')

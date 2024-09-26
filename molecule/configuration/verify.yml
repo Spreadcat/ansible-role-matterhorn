@@ -1,0 +1,66 @@
+---
+- name: Configuration | Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    config_file_lines:
+      - line: "user: {{ matterhorn_mattermost_username }}"
+      - line: "host: {{ matterhorn_mattermost_host }}"
+      - line: "pass: {{ matterhorn_mattermost_pass }}"
+      - line: "team: {{ matterhorn_mattermost_team }}"
+      - line: "port: {{ matterhorn_mattermost_port }}"
+      - line: "urlpath: {{ matterhorn_mattermost_urlpath }}"
+      - line: "pass: {{ matterhorn_mattermost_pass }}"
+      - line: "passcmd: {{ matterhorn_mattermost_passcmd }}"
+      - line: "otptokencmd: {{ matterhorn_mattermost_otptokencmd }}"
+      - line: "timeFormat: {{ matterhorn_timeformat }}"
+      - line: "showMessageTimestamps: {{ matterhorn_showmessagetimestamps }}"
+      - line: "showLastOpenThread: {{ matterhorn_showlastopenthread | string | title }}"
+      - line: "theme: {{ matterhorn_theme }}"
+      - line: "themeCustomizationFile: {{ matterhorn_themecustomizationfile }}"
+      - line: "smartbacktick: {{ matterhorn_smartbacktick | string | title }}"
+      - line: "activityBell: {{ matterhorn_activitybell | string | title }}"
+      - line: "truncateVerbatimBlockHeight: {{ matterhorn_truncateverbatimblockheight }}"
+      - line: "activityNotifyVersion: {{ matterhorn_activitynotifyversion }}"
+      - line: "showbackgroundactivity: {{ matterhorn_showbackgroundactivity }}"
+      - line: "urlOpenCommand: {{ matterhorn_urlopencommand }}"
+      - line: "urlOpenCommandIsInteractive: {{ matterhorn_urlopencommandisinteractive | string | title }}"
+      - line: "showMessagePreview: {{ matterhorn_showmessagepreview | string | title }}"
+      - line: "showChannelList: {{ matterhorn_showchannellist | string | title }}"
+      - line: "showExpandedChannelTopics: {{ matterhorn_showexpandedchanneltopics | string | title }}"
+      - line: "directChannelExpirationDays: {{ matterhorn_directchannelexpirationdays }}"
+      - line: "enableAspell: {{ matterhorn_enableaspell }}"
+      - line: "aspellDictionary: {{ matterhorn_aspelldictionary }}"
+      - line: "unsafeUseUnauthenticatedConnection = {{ matterhorn_unsafeuseunauthenticatedconnection | string | title }}"
+      - line: "validateServerCertificate = {{ matterhorn_validateservercertificate | string | title }}"
+      - line: "channelListWidth = {{ matterhorn_channellistwidth }}"
+      - line: "channelListOrientation = {{ matterhorn_channellistorientation }}"
+      - line: "threadOrientation = {{ matterhorn_threadorientation }}"
+      - line: "logMaxBufferSize = {{ matterhorn_logmaxbuffersize }}"
+      - line: "showOlderEdits = {{ matterhorn_showolderedits | string | title }}"
+      - line: "showTypingIndicator = {{ matterhorn_showtypingindicator | string | title }}"
+      - line: "sendTypingNotifications = {{ matterhorn_sendtypingnotifications | string | title }}"
+      - line: "hyperlinkURLs = {{ matterhorn_hyperlinkurls | string | title }}"
+      - line: "syntaxDirectories = {{ matterhorn_syntaxdirectories | join(':') }}"
+      - line: "cpuUsagePolicy = {{ matterhorn_cpuusagepolicy }}"
+      - line: "defaultAttachmentPath = {{ matterhorn_defaultattachmentpath }}"
+      - line: "enableMouseMode = {{ matterhorn_enablemousemode | string | title }}"
+      - line: "channelListSorting = {{ matterhorn_channellistsorting }}"
+      - line: "teamListSorting = {{ matterhorn_teamlistsorting }}"
+  tasks:
+
+    - name: Verify | Include variables
+      ansible.builtin.include_vars: variables.yml
+
+    - name: Verify | Fetch remote config file
+      ansible.builtin.slurp:
+        src: "{{ matterhorn_config_dir }}/{{ matterhorn_config_file }}"
+      register: __slurped_config_file
+
+    - name: Verify | Check for lines in file with fail
+      ansible.builtin.fail:
+        msg: "not found item: {{ item['line'] }}"
+      loop: "{{ config_file_lines }}"
+      when: item['line'] not in __file_content
+      vars:
+        __file_content: "{{ __slurped_config_file['content'] | b64decode }}"

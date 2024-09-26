@@ -3,9 +3,11 @@
 A simple Ansible role to setup matterhorn on the local machine and configure it.
 It fetches the releases from the matterhorn GitHub page and installs it locally.
 
+Souce repository: <https://github.com/matterhorn-chat/matterhorn/>
+
 ## Requirements
 
-* `bunzip2`, `gunzip`, something like that can be used to unpack the release.
+* None
 
 ## Role Variables
 
@@ -13,7 +15,8 @@ For a list of role variables, defaults and how to use them check out the file `.
 
 ## Dependencies
 
-* None
+* The role requires access to the Matterhorn GitHub account in order to download the release information and release
+  data.
 
 ## Example Playbook
 
@@ -30,6 +33,11 @@ passed in as parameters) is always nice for users too:
       matterhorn_mattermost_username: "jdoe"
       matterhorn_mattermost_password: "foobar"
 ```
+
+## Limitations
+
+* The role will currently always install the latest available release from GitHub or not touch the installed matterhorn
+  version (depending on the settings). It is not possible to install a specific version.
 
 ## License
 

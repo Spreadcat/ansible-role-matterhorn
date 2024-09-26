@@ -1,0 +1,5 @@
+---
+- name: Configuration | Prepare
+  hosts: all
+  gather_facts: false
+  tasks: []
