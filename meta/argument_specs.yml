@@ -88,7 +88,7 @@ argument_specs:
         default: ""
         description:
           - "If the team setting is set, it must be the name of a team of which the user is
-            a member. This is the team you will be automatically use when connecting and you 
+            a member. This is the team you will be automatically use when connecting and you
             will bypass the team selection. If the setting is absent or is not one of your teams
             you will be prompted for a choice of your team."
       matterhorn_mattermost_port:
@@ -104,8 +104,8 @@ argument_specs:
         required: false
         default: ""
         description:
-          - "Server URL path. If the Mattermost server is located at 
-             https://example.com/mattermost, then this would be set to 
+          - "Server URL path. If the Mattermost server is located at
+             https://example.com/mattermost, then this would be set to
              `/mattermost`."
       matterhorn_mattermost_pass:
         type: "str"
@@ -128,7 +128,7 @@ argument_specs:
             implementing the LibSecret D-Bus API (including kwallet and gnome-keyring). Assuming
             that you have stored a password using
             `secret-tool store --label='matterhorn' matterhorn password"
-          -  "You can then set
+          - "You can then set
              `matterhorn_mattermost_passcmd: secret-tool lookup matterhorn password`."
 
       matterhorn_mattermost_tokencmd:
@@ -209,7 +209,7 @@ argument_specs:
         description:
           - "Path of the theme customization file. If present this must either
             be an absolute path or an relative path to the customization file.
-            If the path is relative it must be considered to be relative to the 
+            If the path is relative it must be considered to be relative to the
             location of the configuration file."
 
       matterhorn_smartbacktick:
@@ -303,7 +303,7 @@ argument_specs:
             application error message."
           - "A typical value for this on Linux is: urlOpenCommand = xdg-open"
           - "A more complex alternative: urlOpenCommand: 'qutebrowser --backend webengine --no-err-windows -l critical'"
-            
+
       matterhorn_urlopencommandisinteractive:
         type: "bool"
         required: false
@@ -343,7 +343,7 @@ argument_specs:
         description:
           - "How many days keep a direct channel in the channel list after the
             last message."
-      
+
       matterhorn_enableaspell:
         type: "bool"
         default: false
