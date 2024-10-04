@@ -123,7 +123,6 @@ matterhorn_mattermost_urlpath: ''
 #
 matterhorn_mattermost_pass: ''
 
-
 # Password command. Optional. If this and the password option are both
 # missing or give the wrong password, you'll be prompted on startup.
 #
