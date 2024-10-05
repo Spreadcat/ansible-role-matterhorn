@@ -1,8 +1,8 @@
 ---
 # Set the state of matterhorn on the target host.
-# If set to latest, the role will check for the latest release online
-# and update the local installation if it's lower than the remote one.
-# If set to latest and _matterhorn_release_url_ is set, the specified tar.bz2 package will
+# If set to `latest`, the role will check for the latest release online
+# and update the local installation if it is lower than the remote one.
+# If set to `latest` and _matterhorn_release_url_ is set, the specified tar.bz2 package will
 # be installed in any case.
 # If set to present, matterhorn will be installed if missing, otherwise not.
 #
