@@ -1,0 +1,545 @@
+---
+argument_specs:
+  # roles/spreadcat.matterhorn/tasks/main.yml entry point
+  main:
+    short_description: Main entry point for the matterhorn role
+    description:
+      - This is the main entry point and only entry point for the role.
+    author:
+      - Daniel Buøy-Vehn
+    options:
+      matterhorn_state:
+        type: "str"
+        required: false
+        default: "present"
+        choices:
+          - "present"
+          - "latest"
+        description:
+          - "Sets the state of the matterhorn version on the target host."
+          - "If set to 'latest', the role will install the latest online release and update
+            the local installation if it is a lower version than the remote one."
+          - "If set to 'latest' and `matterhorn_release_url` is set, the specified tar.bz2 package
+            will be installed in any case."
+          - "if set to 'present', matterhorn will be installed if missing. Otherwise not."
+      matterhorn_username:
+        type: "str"
+        required: false
+        description:
+          - "Sets the host user account to use when placing the config file and giving file permissions."
+          - "The user must exist."
+      matterhorn_groupname:
+        type: "str"
+        required: false
+        description:
+          - "Sets the groupname for filepermissions on the destination host."
+          - "The group must exist."
+        default: "{{ lookup('env', 'USER') }}"
+      matterhorn_userhome:
+        type: "str"
+        required: false
+        description:
+          - "Sets the path to the user home in which the configuration file will be stored."
+        default: "{{ lookup('env', 'HOME') }}"
+      matterhorn_dest_dir:
+        type: "str"
+        required: false
+        default: "/usr/bin"
+        description:
+          - "Sets the destination directory in which the binary file of matterhorn will be placed."
+          - "This assumes a system wide accessible directory. The file ownership will be the root account."
+      matterhorn_config_dir:
+        type: "str"
+        default: "{{ matterhorn_userhome }}/./config/matterhorn"
+        required: false
+        description:
+          - "Sets the path to where the matterhorn configuration file will be placed."
+      matterhorn_config_file:
+        type: "str"
+        default: "config.ini"
+        required: false
+        description:
+          - "Sets the filename of the configuration file for matterhorn within the configuration
+            directory."
+      matterhorn_config_file_overwrite:
+        type: "bool"
+        default: false
+        required: false
+        description:
+          - "If set to true any existing configuration file at `matterhorn_config_dir` will be overwritten
+            and the values replaced with the settings for this role."
+      matterhorn_mattermost_username:
+        type: "str"
+        required: false
+        default: ""
+        description:
+          - "Mattermost username. If empty, you will be asked to provide one on startup."
+      matterhorn_mattermost_host:
+        type: "str"
+        required: false
+        default: ""
+        description:
+          - "Mattermost hostname. If empty, you will be asked to provide onen on startup.
+            Note that this is just the IP adddress or hostname of the server; it should not
+            include anything else such as the URL scheme, path, etc."
+      matterhorn_mattermost_team:
+        type: "str"
+        required: false
+        default: ""
+        description:
+          - "If the team setting is set, it must be the name of a team of which the user is
+            a member. This is the team you will be automatically use when connecting and you
+            will bypass the team selection. If the setting is absent or is not one of your teams
+            you will be prompted for a choice of your team."
+      matterhorn_mattermost_port:
+        type: "int"
+        required: false
+        default: 443
+        description:
+          - "Mattermost serer port. If you are not using TLS and intend to use another port, you MUST
+            set the port accordingly and then set `unsafeUseUnauthenticatedConnection` to disable TLS."
+          - "Matterhorn uses TLS by default regardless of the port value."
+      matterhorn_mattermost_urlpath:
+        type: "str"
+        required: false
+        default: ""
+        description:
+          - "Server URL path. If the Mattermost server is located at
+             https://example.com/mattermost, then this would be set to
+             `/mattermost`."
+      matterhorn_mattermost_pass:
+        type: "str"
+        required: false
+        default: ""
+        description:
+          - "Mattermost server password. This parameter is unsafe to use."
+
+      matterhorn_mattermost_passcmd:
+        type: "str"
+        required: false
+        default: ""
+        description:
+          - "Password command. If this and the password option are both missing or you give
+            the wrong password, you will be prompted on startup."
+          - "You can also use `matterhorn_mattermost_pass` instead, but that is much less secure
+             than supplying a command or being prompted interactively."
+          - "On Linux, there are a number of options. Secret-tool is part of libsecret (in
+            libsecret-tools on Ubuntu) and acts as a uniform interface to all password managers
+            implementing the LibSecret D-Bus API (including kwallet and gnome-keyring). Assuming
+            that you have stored a password using
+            `secret-tool store --label='matterhorn' matterhorn password"
+          - "You can then set
+             `matterhorn_mattermost_passcmd: secret-tool lookup matterhorn password`."
+
+      matterhorn_mattermost_tokencmd:
+        type: "str"
+        required: false
+        default: ""
+        description:
+          - "Access token token command. Optional. If this is specified, the
+            provided command will be executed to obtain an OAuth or Personal
+            Access Token that can be used instead of username and password
+            credentials for authentication with the Mattermost server. The token
+            command takes precedence over username and password configuration
+            options, i.e., when a token is specified username and password options
+            are ignored. Providing this setting is equivalent to entering a token
+            in the login user interface's 'Access Token' field."
+          - "For details on how to configure your system's keychain, see the
+            'passcmd' documentation above."
+          - "The token command functions just like the password command. If you
+            have obtained a personal access token and stored it in your keychain,
+            you can use it like this:
+            matterhorn_mattermost_tokencmd: secret-tool lookup matterhorn token"
+      matterhorn_mattermost_otptokencmd:
+        type: "str"
+        required: false
+        default: ""
+        description:
+          - "OTP token command. If this is specified, the provided command will be executed
+            to obtain OTP token required by matterhorn 2FA. The resulting 6 digi code will be
+            inserted into the OTP prompt automatically."
+      matterhorn_timeformat:
+        type: "str"
+        required: false
+        default: "%R"
+        description:
+          - "This settings controls how the client displays times."
+          - "If it's empty, that turns the timestamps off. Otherwise its value is used as
+            the time-format string."
+          - "The format string is that accepted by 'formatTime':
+            https://hackage.haskell.org/package/time-1.6.0.1/docs/Data-Time-Format.html#v:formatTime"
+
+      matterhorn_dateformat:
+        type: "str"
+        default: "%Y-%m-%d"
+        required: false
+        description:
+          - "This setting controls how the client displays dates."
+          - "If it's not empty, its value is used to display dates."
+          - "The format string is that accepted by 'formatTime':
+            https://hackage.haskell.org/package/time-1.6.0.1/docs/Data-Time-Format.html#v:formatTime"
+      matterhorn_showmessagetimestamps:
+        type: "bool"
+        default: true
+        required: false
+        description:
+          - "If set to true, messages show a timestamp."
+      matterhorn_showlastopenthread:
+        type: "bool"
+        required: false
+        default: false
+        description:
+          - "If set to true, the last thread that was open gets opened on the next
+            run of matterhorn."
+
+      matterhorn_theme:
+        type: "str"
+        required: false
+        default: "builtin:dark"
+        description:
+          - "Selects the theme."
+        choices:
+          - "builtin:dark"
+          - "builtin:light"
+
+      matterhorn_themecustomizationfile:
+        type: "str"
+        required: false
+        default: ""
+        description:
+          - "Path of the theme customization file. If present this must either
+            be an absolute path or an relative path to the customization file.
+            If the path is relative it must be considered to be relative to the
+            location of the configuration file."
+
+      matterhorn_smartbacktick:
+        type: "bool"
+        default: true
+        required: false
+        description:
+          - "Smart character pair insertion for '``', '**' and '__'."
+
+      matterhorn_activitybell:
+        type: "bool"
+        default: false
+        required: false
+        description:
+          - " Terminal bell control: ring tht terminal bell whenever a new message arrives."
+
+      matterhorn_truncateverbatimblockheight:
+        type: "int"
+        default: 0
+        required: false
+        description:
+          - "How to truncate long verbatim and code blocks. When set to zero
+            (0), no truncation occurs and verbatim and code blocks are rendered
+            as-is. When set to any value greater than zero (say N), Matterhorn
+            will display only up to N lines of each verbatim or code block and
+            will indicate that the block has been truncated. The
+            toggle-truncate-verbatim-blocks command can be used to toggle this
+            behaviour at runtime."
+
+      matterhorn_activitynotifycommand:
+        type: "str"
+        default: ""
+        required: false
+        description:
+          - "Notification script control: run a notification script whenever a new
+            message arrives. See the 'notify' script in notification-scripts/ for an
+            example Linux ontification script for version 1 notifications (note
+            activitynotifyversion, below). See the 'notifyV2' script for an example
+            Linux notification script for version 2 notifications."
+
+      matterhorn_activitynotifyversion:
+        type: "int"
+        default: 1
+        required: false
+        choices:
+          - 1
+          - 2
+        description:
+          - "Notification script control: select the notifier payload version.
+            This affects how the activitynotifycommand is invoked."
+          - "Version 1 notifications pass details to the notification script on the
+            command line."
+          - "Version 2 notifications invoke the notification script without command
+            line parameters; the details are provided as a JSON value on standard input."
+
+      matterhorn_showbackgroundactivity:
+        type: "str"
+        required: false
+        default: "Disabled"
+        description:
+          - "Background activity display: Matterhorn communicates with the Mattermost
+            server using asynchronous background thread processing. This parameter
+            can be used to enable a visual display of when and how much backgorund
+            activity is occurring. The 'ActiveCount' value displays the number of
+            queued work requests to the background thread; there may be multiple
+            server messages performed for each work request, so this value is just
+            a relative indicator of the amount of work pending for processing by
+            this thread."
+        choices:
+          - "Disabled"
+          - "Active"
+          - "ActiveCount"
+
+      matterhorn_urlopencommand:
+        type: "str"
+        default: ""
+        required: false
+        description:
+          - "The command to use to open attachments and URLs found in chat
+            messages. Matterhorn invokes this command with the URL appended as the last command
+            argument. Matterhorn assumes the command will perform the opening
+            asynchronously, i.e., Matterhorn assumes the command will return
+            immediately after invoking a background process to open the URL. This
+            is how OS X's 'open' command behaves and is also true for Linux's
+            'xdg-open'. Matterhorn will also only ever invoke this command for one
+            URL at a time. If, for example, the 'open all URLs' action is invoked
+            on a message with more than one URL, this command will be invoked
+            repeatedly, once per URL. The same is true for message attachments."
+          - "If the program exits with a non-zero exit status, Matterhorn will
+            treat that as a URL opener failure and will report it to you as an
+            application error message."
+          - "A typical value for this on Linux is: urlOpenCommand = xdg-open"
+          - "A more complex alternative: urlOpenCommand: 'qutebrowser --backend webengine --no-err-windows -l critical'"
+
+      matterhorn_urlopencommandisinteractive:
+        type: "bool"
+        required: false
+        default: false
+        description:
+          - "This setting indicates wheter the URL-opening command is interactive in the
+            terminal. Set this to true if you urlOpenCommand ia terminal web browser or
+            other program that needs to control the terminal while viewing a URL."
+          - "Set this to false otherwise."
+
+      matterhorn_showmessagepreview:
+        type: "bool"
+        required: false
+        default: false
+        description:
+          - "Whether to show a message rendering preview."
+
+      matterhorn_showchannellist:
+        type: "bool"
+        default: true
+        required: false
+        description:
+          - "Whether to show the channel list."
+
+      matterhorn_showexpandedchanneltopics:
+        type: "bool"
+        default: true
+        required: false
+        description:
+          - "Wheterh to show more than the first line of the current channel's
+            topic if it has multiple lines."
+
+      matterhorn_directchannelexpirationdays:
+        type: "int"
+        default: 7
+        required: false
+        description:
+          - "How many days keep a direct channel in the channel list after the
+            last message."
+
+      matterhorn_enableaspell:
+        type: "bool"
+        default: false
+        required: false
+        description:
+          - "Whether to enable the spell check if 'aspell' is present on the
+            system."
+
+      matterhorn_aspelldictionary:
+        type: "str"
+        default: ""
+        required: false
+        description:
+          - "Name a speciig Aspell dictionary to use. See 'aspell dicts' for a
+            list of available dictionaries on you system. The directory must
+            exist and will not be created."
+          - "If empty the default behaviour is to fall back on the environment/local
+            setting."
+
+      matterhorn_unsafeuseunauthenticatedconnection:
+        type: "bool"
+        default: false
+        required: false
+        description:
+          - "Force Matterhorn to use HTTP instead of HTTPS. This is mostly included
+            for testing purposes; you really should not use this unless you're
+            absolutely sure it's what you want, i.e., you run an HTTP server and
+            you are aware that doing so means you have no transport security."
+
+      matterhorn_validateservercertificate:
+        type: "bool"
+        default: true
+        required: false
+        description:
+          - "Whether to validate the server's TLS certificate. It is STRONGLY
+            RECOMMENDED to keep this set to its default value of true. Only
+            disable this if your server certificate is self-signed or is not
+            part of your keychain, and if you are okay with the risk of using an
+            untrusted certificate."
+
+      matterhorn_channellistwidth:
+        type: "int"
+        default: 22
+        required: false
+        description:
+          - "The width of the channel list (in columns)."
+
+      matterhorn_channellistorientation:
+        type: "str"
+        required: false
+        default: "left"
+        choices:
+          - "left"
+          - "right"
+        description:
+          - "The orientation of the channel list. Valid values are 'left' (the left
+            side of the screen) and 'right' (the right side of the screen)."
+
+      matterhorn_threadorientation:
+        type: "str"
+        default: "below"
+        required: false
+        choices:
+          - "above"
+          - "below"
+          - "left"
+          - "right"
+        description:
+          - "The orientation of the thred interface relative to the channel message
+            interface."
+
+      matterhorn_logmaxbuffersize:
+        type: "int"
+        default: 200
+        required: false
+        description:
+          - "The maximum size of the internal log buffer, in log entries. This
+            buffer is initially flushed to the log file when logging starts.
+            Matterhorn keeps these log entries around, discarding old entries to
+            keep the buffer from exceeding this size."
+
+      matterhorn_showolderedits:
+        type: "bool"
+        default: true
+        required: false
+        description:
+          - "Whether to show indicators on edited messages that have not been
+            edited recently."
+
+      matterhorn_showtypingindicator:
+        type: "bool"
+        required: false
+        default: false
+        description:
+          - "Whether to show the indicator when other users are typing."
+
+      matterhorn_sendtypingnotifications:
+        type: "bool"
+        default: false
+        required: false
+        description:
+          - "Whether to send notiications to other users when you are typing."
+
+      matterhorn_hyperlinkurls:
+        type: "bool"
+        default: true
+        required: false
+        description:
+          - "Whether to hyperlink URLs in the terminal. When enabled, this means
+            Matterhorn will emit special escape sequences to make URLs clickable.
+            Some terminal emulators do not support this feature, and in some of
+            those cases the program's output can be garbled so this setting is
+            provided for that case."
+
+      matterhorn_syntaxdirectories:
+        type: "list"
+        default: []
+        required: false
+        description:
+          - "The list of directories from which to load Kate XML syntax definitions
+            for code block syntax highlighting. The syntax is a colon-separated
+            list of paths, with the highest-precedence path appearing first."
+          - "Where USER_SYNTAX is a special path alias for
+            ~/.config/matterhorn/syntax/ and BUNDLED_SYNTAX is a special path
+            alias that refers to the path to XML files in the Matterhorn
+            distribution relative to the 'matterhorn' binary."
+
+      matterhorn_cpuusagepolicy:
+        type: "str"
+        default: "multiple"
+        required: false
+        choices:
+          - "single"
+          - "multiple"
+        description:
+          - "The CPU usage policy for Matterhorn."
+          - "Valid values are 'single' and 'multiple'.
+            If set to 'single', the application will be constrained to a single
+            CPU. This mode can sometimes result in interface input latency. If set
+            to 'multiple', the application will use more than one CPU up to an
+            application-defined reasonable maximum, or the number of CPUs on the
+            host, whichever is smaller."
+
+      matterhorn_defaultattachmentpath:
+        type: "str"
+        required: false
+        default: ""
+        description:
+          - "If this is specified and the directory at this path exists, the
+            path will be used as the starting path of the attachment browser.
+            If not specified or if the path does not exist, the current working
+            directory of matterhorn process will be used as the starting path of
+            the attachment browser."
+
+      matterhorn_enablemousemode:
+        type: "bool"
+        default: false
+        required: false
+        description:
+          - "Whether to enable mouse support for matterhorn."
+
+      matterhorn_channellistsorting:
+        type: "str"
+        default: "default"
+        required: false
+        choices:
+          - "default"
+          - "unread-first"
+        description:
+          - "How to sort non-DM channels within channel sidebar groups.
+            Options:
+            - 'default' - sort alphabetically with muted channels at the bottom of
+              each group
+            - 'unread-first' - same as default except that unread channels are
+              displayed at the top of each group"
+
+      matterhorn_teamlistsorting:
+        type: "str"
+        required: false
+        default: "default"
+        choices:
+          - "default"
+          - "unread-first"
+        description:
+          - "How to sort teams within the team list."
+          - "Options:
+            - 'default' - sort alphabetically and respect team ordering
+              preferences set with /move-team-left and /move-team-right
+            - 'unread-first' - same as default except that unread teams are
+              displayed first regardless of other ordering considerations"
+
+      matterhorn_github_release_url:
+        type: "str"
+        required: false
+        default: "https://api.github.com/repos/matterhorn-chat/matterhorn/releases/latest"
+        description:
+          - "Sets the URL For the release of matterhorn on Github."
+          - "This url is used to pull the latest release from GitHub and install it
+             if the matterhorn_state is set to 'latest' or no rpm is given."

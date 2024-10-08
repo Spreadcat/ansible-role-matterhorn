@@ -17,7 +17,7 @@ matterhorn_mattermost_otptokencmd: "pass otp mattermost | head -n 1"
 matterhorn_timeformat: "%Y-%m-%d"
 matterhorn_showmessagetimestamps: false
 matterhorn_showlastopenthread: true
-matterhorn_theme: light
+matterhorn_theme: "builtin:light"
 matterhorn_themecustomizationfile: /example/matterhorn/theme.ini
 matterhorn_smartbacktick: true
 matterhorn_activitybell: true
